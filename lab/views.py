@@ -1,5 +1,4 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from django.shortcuts import render_to_response
 from django.views.generic import ListView
 import markdown
@@ -9,14 +8,12 @@ import os
 import time
 
 # Create your views here.
-=======
 
 # Create your views here.
 from django.template import Context
 from django.views.generic import ListView, View
 import markdown
 from lab.models import Article, Member
->>>>>>> master
 
 
 class BlogIndexView(ListView):
@@ -25,7 +22,6 @@ class BlogIndexView(ListView):
     def get_queryset(self):
         article_list = Article.objects.filter(status='p')
         for article in article_list:
-<<<<<<< HEAD
             article.body = markdown.markdown(article.body,)
         return article_list
 
@@ -77,13 +73,8 @@ def uploadresult(request):
             print(e)
             return HttpResponse('Some error happend ,please review')
 
-
-
-
-
-=======
-            article.body = markdown.markdown(article.body, )
-        return article_list
+        article.body = markdown.markdown(article.body, )
+    return article_list
 
 
 def login(request):
@@ -124,4 +115,3 @@ def register(request):
 
 def registerAction(request):
     return memberIndexView(request)
->>>>>>> master
