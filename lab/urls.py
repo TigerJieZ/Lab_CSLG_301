@@ -18,5 +18,7 @@ from django.conf.urls import url
 from lab import views
 
 urlpatterns = [
-    url('',views.IndexView.as_view())
+    url('index.html',views.IndexView.as_view()),
+    url('upload.html',views.uploadactcle),
+    url('upload_result',views.uploadresult),
 ]
