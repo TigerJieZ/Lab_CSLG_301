@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog-Upload</title>
+</head>
+<body>
+    <form action="upload_result" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        标题<input type="text" name="title"><br>
+        文本<input type="file" name="body"><br>
+        文章状态<select name="status">
+                    <option value="d">d</option>
+                    <option value="p">p</option>
+                </select><br>
+        摘要<textarea name="abstract"></textarea><br>
+        是否置顶<input type="radio" name="topped">置顶
+        <input type="radio" name="topped" checked="checked">不置顶<br>
+        标签《暂未实现》<br>
+        <input type="submit" name="upload_button" value="upload">
+    </form>
+
+</body>
+</html>

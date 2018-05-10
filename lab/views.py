@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import render_to_response
 from django.views.generic import ListView
 import markdown
 from django.http import HttpResponse
@@ -20,7 +21,7 @@ class IndexView(ListView):
 
 
 def uploadactcle(request):
-    return render(request,'blog/upload.html')
+    return render(request, 'blog/upload.html')
 
 
 def uploadresult(request):
