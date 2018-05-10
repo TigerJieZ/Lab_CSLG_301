@@ -18,5 +18,9 @@ from django.conf.urls import url
 from lab import views
 
 urlpatterns = [
-    url('',views.IndexView.as_view())
+    url('^$',views.memberIndexView),
+    url('login$',views.login),
+    url('login_action$',views.loginAction),
+    url('register$',views.register),
+    url('register_action',views.registerAction)
 ]

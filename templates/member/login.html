@@ -1,0 +1,72 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>沙和尚工作室</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  <!-- Google web font "Open Sans" -->
+  <link rel="stylesheet" href="{% static "login/css/font-awesome.min.css" %}">
+  <link rel="stylesheet" href="{% static "login/css/bootstrap.min.css"%}">
+  <link rel="stylesheet" href="{% static "login/css/demo.css"%}" />
+  <link rel="stylesheet" href="{% static "login/css/templatemo-style.css"%}">
+  <script type="text/javascript" src="{% static "login/js/modernizr.custom.86080.js"%}"></script>
+		
+	</head>
+	<body>
+
+			<div id="particles-js"></div>
+		
+			<ul class="cb-slideshow">
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	            <li></li>
+	        </ul>
+
+			<div class="container-fluid">
+				<div class="row cb-slideshow-text-container ">
+					<div class= "tm-content col-xl-6 col-sm-8 col-xs-8 ml-auto section">
+					<header class="mb-5"><h1>沙和尚工作室</h1></header>
+					<!--<P class="mb-5">A sign-up letter template with three background images shuffling by fade in out movements. Thank you for visiting our site!</P>-->
+					
+                    <form action="login_action" method="post" class="subscribe-form">
+                        {% csrf_token %}
+               	    	<div class="row form-section">
+
+							<div class="col-md-7 col-sm-7 col-xs-7">
+			                      <input name="inputEmail" type="Email" class="form-control" id="contact_username" placeholder="UserName..." required/>
+								  <br>
+				  			</div>
+							<div class="col-md-7 col-sm-7 col-xs-7">
+			                      <input name="inputPassword" type="password" class="form-control" id="contact_password" placeholder="Password..." required/>
+								<br>
+							</div>
+							<div class="col-md-7 col-sm-7 col-xs-7">
+								<button type="submit" class="tm-btn-subscribe">Subscribe</button>
+							</div>
+						
+						</div>
+                    </form>
+                    
+					</div>
+				</div>	
+				<div class="footer-link">
+					<p>沙和尚工作室
+                    
+                    - 设计者: <a rel="nofollow" href="#" target="_parent">设计人</a></p>
+                    <p>更多信息 
+						<a href="http://www.cssmoban.com/" target="_blank" title="沙和尚工作室">沙和尚工作室</a> 
+						- Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>
+					</p>
+				</div>
+			</div>	
+	</body>
+
+	<script type="text/javascript" src="{% static "login/js/particles.js"%}"></script>
+	<script type="text/javascript" src="{% static "login/js/app.js"%}"></script>
+</html>
