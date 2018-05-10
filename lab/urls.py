@@ -19,6 +19,8 @@ from lab import views
 
 urlpatterns = [
     url('index.html',views.IndexView.as_view()),
-    url('upload.html',views.uploadactcle),
-    url('upload_result',views.uploadresult),
+    url('upload',views.uploadactcle),
+    url('result',views.uploadresult),
+    url('reedit',views.reeditacticle),
+    url('result',views.reeditresult),
 ]
