@@ -2,3 +2,4 @@ venv/
 *.xml
 *.pyc
 *.pyc
+lab/__pycache__/
