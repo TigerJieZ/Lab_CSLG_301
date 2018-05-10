@@ -4,10 +4,6 @@ from django.db import models
 from django.urls import reverse
 
 
-class Member(models.Model):
-    name = models.CharField('姓名', max_length=30)
-
-
 class Article(models.Model):
     STATUS_CHOICES = (
         ('d', 'part'),
@@ -98,5 +94,25 @@ class Suggest(models.Model):
         return self.suggest
 
 
-class Test(models.Model):
-    title = models.TextField('标题', max_length=200)
+class Member(models.Model):
+    name = models.CharField('姓名', max_length=30)
+    studentID=models.CharField('学号',max_length=30)
+    gender = models.CharField('性别', max_length=10)
+    birthday = models.DateField('出生年月', auto_now_add=True)
+    email = models.EmailField('邮箱')
+    password = models.CharField('密码', max_length=10)
+    profession = models.CharField('专业', max_length=30)
+    academy = models.CharField('学院', max_length=30)
+    articles = models.ManyToManyField(Article)
+    permission = models.CharField('权限', max_length=10)
+
+    def __str__(self):
+        return self.name
+
+
+class Group(models.Model):
+    name = models.CharField('组名', max_length=10)
+    members = models.ForeignKey(Member,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
