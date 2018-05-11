@@ -81,58 +81,8 @@ def reeditacticle(request):
 
 
 def reeditresult(request):
-    message = "修改成功"
-    if request.method == "POST":
-        try:
-            user_name = request.session['user_name']
-            title = request.POST['title']
-            file = request.FILES.get("body")
-            status = request.POST['status']
-            abstract = request.POST['abstract']
-            topped = request.POST['topped']
+    print("")
 
-            if title != "" and not file and file.name.find(".md") == -1:
-                message = "请选择正确的MarkDown文件"
-                return render(request, "blog/result.html", {"message": message})
-            else:
-                #文件写入本地
-                path="E:\\upload"
-                if not os.path.isdir(path):
-                    os.makedirs(path)
-                destination = open(os.path.join(path, file.name), 'wb+')  # 打开特定的文件进行二进制的写操作
-                for chunk in file.chunks():  # 分块写入文件
-                    destination.write(chunk)
-                destination.close()
-
-                #信息写入数据库
-                if topped == "on":
-                    topped = True
-                Member.objects.get(name=user_name).articles.create(title=title,
-                                       body=path+file.name,
-                                       created_time=time.time(),
-                                       last_modified_time=time.time(),
-                                       status=status,
-                                       abstract=abstract,
-                                       views=0,
-                                       likes=0,
-                                       topped=topped,
-                                       category_id=1)
-                Article.objects.create(title=title,
-                                       body=path+file.name,
-                                       created_time=time.time(),
-                                       last_modified_time=time.time(),
-                                       status=status,
-                                       abstract=abstract,
-                                       views=0,
-                                       likes=0,
-                                       topped=topped,
-                                       category_id=1
-                                       )
-                return render(request, "blog/result.html", {"message": message})
-
-        except Exception as e:
-            print(e)
-            return HttpResponse('Some error happend ,please review')
 
 
 
