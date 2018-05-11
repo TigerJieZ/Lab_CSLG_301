@@ -18,11 +18,8 @@ from django.conf.urls import url
 from lab import views
 
 urlpatterns = [
-<<<<<<< HEAD:lab/urls.py
-    url('index.html',views.IndexView.as_view()),
+    url('index.html',views.BlogIndexView.as_view()),
     url('upload.html',views.uploadactcle),
     url('upload_result',views.uploadresult),
-=======
     url('', views.BlogIndexView.as_view())
->>>>>>> master:lab/blog_urls.py
 ]
