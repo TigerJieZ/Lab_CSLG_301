@@ -10,7 +10,7 @@ import time
 # Create your views here.
 
 # Create your views here.
-from django.template import Context
+from django.template import Context, RequestContext
 from django.views.generic import ListView, View
 import markdown
 from lab.models import Article, Member
@@ -22,7 +22,11 @@ class BlogIndexView(ListView):
     def get_queryset(self):
         article_list = Article.objects.filter(status='p')
         for article in article_list:
+<<<<<<< HEAD
             article.body = markdown.markdown(article.body,)
+=======
+            article.body = markdown.markdown(article.body, )
+>>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
         return article_list
 
 
@@ -45,8 +49,8 @@ def uploadresult(request):
                 message = "请选择正确的MarkDown文件"
                 return render(request, "blog/result.html", {"message": message})
             else:
-                #文件写入本地
-                path="E:\\upload"
+                # 文件写入本地
+                path = "E:\\upload"
                 if not os.path.isdir(path):
                     os.makedirs(path)
                 destination = open(os.path.join(path, file.name), 'wb+')  # 打开特定的文件进行二进制的写操作
@@ -54,11 +58,16 @@ def uploadresult(request):
                     destination.write(chunk)
                 destination.close()
 
-                #信息写入数据库
+                # 信息写入数据库
                 if topped == "on":
                     topped = True
+<<<<<<< HEAD
                 Member.objects.get(name=user_name).articles.create(title=title,
                                        body=path+file.name,
+=======
+                Article.objects.create(title=title,
+                                       body=path + file.name,
+>>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
                                        created_time=time.time(),
                                        last_modified_time=time.time(),
                                        status=status,
@@ -73,6 +82,7 @@ def uploadresult(request):
             print(e)
             return HttpResponse('Some error happend ,please review')
 
+<<<<<<< HEAD
 
 def reeditacticle(request):
     title = "ttt"
@@ -84,6 +94,10 @@ def reeditresult(request):
     print("")
 
 
+=======
+        article.body = markdown.markdown(article.body, )
+    return article_list
+>>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
 
 
 def login(request):
@@ -108,6 +122,8 @@ def loginAction(request):
     else:
         # 登录成功将user_name存入上下文中
         request.session['user_name'] = member.name
+        request.session['studentID']=member.studentID
+
         # 用户个人首页
         return memberIndexView(request)
 
@@ -123,8 +139,31 @@ def memberIndexView(request):
 
 
 
+
 def register(request):
-    return render(request,'member/register.html')
+    return render(request, 'member/register.html')
+
 
 def registerAction(request):
+    # 读取表单输入的Email和Password
+    post_data = dict(request.POST)
+    name=post_data['InputName'][0]
+    email=post_data['InputEmail'][0]
+    password=post_data['InputPassword'][0]
+    password2=post_data['InputPassword2'][0]
+    studentID=post_data['InputStudentID'][0]
+    gender=post_data['InputGender'][0]
+    birthday=post_data['InputBirthday'][0]
+    academy=post_data['InputAcademy'][0]
+    profession=post_data['InputProfession'][0]
+
+    if not password[0] == password2[0]:
+        return register(request)
+
+    Member.objects.create(name=name,email=email,password=password,
+                          studentID=studentID,gender=gender,birthday=birthday,
+                          academy=academy,profession=profession).save()
+
+    request.session['user_name']=name
+    request.session['studentID']=studentID
     return memberIndexView(request)
