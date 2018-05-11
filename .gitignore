@@ -3,8 +3,3 @@ venv/
 *.pyc
 lab/__pycache__/
 __pycache__/
-<<<<<<< HEAD
-=======
->>>>>>> master
-*.pyc
->>>>>>> e289fdb17fc127d437fd38a42c67936396cc760e
