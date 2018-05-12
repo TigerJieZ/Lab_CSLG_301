@@ -18,19 +18,11 @@ from django.conf.urls import url
 from lab import views
 
 urlpatterns = [
-<<<<<<< HEAD
 
-    url('index.html',views.BlogIndexView.as_view()),
+    url(r'index$', views.index_view,),
+    url(r'index/(\d+)$', views.index_view_page,name= "blog_index"),
+    url(r'upload$', views.upload_view),
+    url(r'result$', views.upload_action),
 
-    url('upload',views.uploadactcle),
-    url('result',views.uploadresult),
 
-    url('', views.BlogIndexView.as_view())
-
-=======
-    url('index.html',views.BlogIndexView.as_view()),
-    url('upload.html',views.uploadactcle),
-    url('upload_result',views.uploadresult),
-    url('', views.BlogIndexView.as_view())
->>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
 ]

@@ -1,0 +1,18 @@
+{% extends 'base_template.html' %}
+
+{% block editedable_area_left %}
+
+    {% block blog_index_part %}{% endblock %}
+
+    {% block blog_upload_part %}{% endblock %}
+
+    {% block blog_reedit_part %}{% endblock %}
+
+{% endblock %}
+
+{% block editedable_area_right %}
+
+    {% include "blog/blog_rank.html" %}
+
+{% endblock %}
+

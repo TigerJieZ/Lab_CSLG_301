@@ -17,16 +17,9 @@ from django.contrib import admin
 from django.conf.urls import url, include
 
 urlpatterns = [
-    url('admin/', admin.site.urls),
-<<<<<<< HEAD
 
     url(r'^admin/', admin.site.urls),
     url(r'^blog/', include('lab.blog_urls')),
     url(r'^member/',include('lab.member_urls')),
 
-=======
-    url(r'^admin/', admin.site.urls),
-    url(r'^blog/', include('lab.blog_urls')),
-    url(r'^member/',include('lab.member_urls')),
->>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
 ]

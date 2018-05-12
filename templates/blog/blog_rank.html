@@ -1,0 +1,61 @@
+
+            <table class="table">
+				<thead>
+					<tr>
+						<th>
+							序号
+						</th>
+						<th>
+							标题
+						</th>
+						<th>
+							点赞量
+						</th>
+                        <th>
+							修改时间
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+                {% for article in articles_rank1 %}
+                    <tr>
+                    <td>{{ forloop.counter}}</td>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.likes }}</td>
+                    <td>{{ article.last_modified_time }}</td>
+                    </tr>
+                {% endfor %}
+				</tbody>
+			</table>
+
+
+            <table class="table">
+				<thead>
+					<tr>
+						<th>
+							序号
+						</th>
+						<th>
+							标题
+						</th>
+						<th>
+							点赞量
+						</th>
+                        <th>
+							修改时间
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+                {% for article in articles_rank2 %}
+                    <tr>
+                    <td><p>{{ forloop.counter}}</p></td>
+                    <td><p>{{ article.title }}</p></td>
+                    <td><p>{{ article.likes }}</p></td>
+                    <td><p>{{ article.last_modified_time }}</p></td>
+                    </tr>
+                {% endfor %}
+				</tbody>
+			</table>
+
+

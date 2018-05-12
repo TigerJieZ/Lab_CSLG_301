@@ -1,40 +1,73 @@
 from django.shortcuts import render
-from django.shortcuts import render_to_response
-from django.views.generic import ListView
-import markdown
-from django.http import HttpResponse
-from lab.models import Article
-import os
+from django.http import HttpResponse,HttpResponseRedirect
 import time
-
-# Create your views here.
-
-# Create your views here.
 from django.template import Context, RequestContext
 from django.views.generic import ListView, View
 import markdown
 from lab.models import Article, Member
+from django.core.urlresolvers import reverse
 
 
-class BlogIndexView(ListView):
-    template_name = 'blog/index.html'
-
-    def get_queryset(self):
-        article_list = Article.objects.filter(status='p')
-        for article in article_list:
-<<<<<<< HEAD
-            article.body = markdown.markdown(article.body,)
-=======
-            article.body = markdown.markdown(article.body, )
->>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
-        return article_list
+def index_view(request):
+    return HttpResponseRedirect(
+        reverse('blog_index', args=[1])
+    )
 
 
-def uploadactcle(request):
-    return render(request, 'blog/upload.html')
+def index_view_page(request,i):
+    i=int(i)
+
+    #按照最后一次的修改时间来排序
+    articles = Article.objects.order_by("last_modified_time").all()
+
+    #根据页数i，一个html获取四个article，
+    start = (i-1)*4
+    end = i*4
+    article_4 = articles[start:end]
+
+    #获取总的文章数量
+    numOfarticles = articles.__len__()
+
+    #总页数
+    pagenum = int(numOfarticles/4)+1
+    if i < pagenum:
+        pages = [-1,i+1,i+2,i+3]
+    else:
+        pages = [pagenum-3,pagenum-2,pagenum-1,-1]
+    prev = i-1
+    next = i+1
+    final = pagenum
+
+    articles_rank1 = rank("-likes")
+    articles_rank2 = rank("-views")
+
+    return render(request, 'blog/blog_index.html', {"articles": article_4,
+                                                    "pages": pages,
+                                                    "prev": prev,
+                                                    "next": next,
+                                                    "final": final,
+                                                    "articles_rank1": articles_rank1,
+                                                    "articles_rank2": articles_rank2,
+                                                    })
 
 
-def uploadresult(request):
+#condition (likes => 点赞量 views => 浏览量) (排序方式是从小到大，请加上“-”)
+def rank(condition):
+    articles = Article.objects.order_by(condition).all()
+    article_4 = articles[0:4]
+    return article_4
+
+
+def upload_view(request):
+    articles_rank1 = rank("-likes")
+    articles_rank2 = rank("-views")
+    return render(request, 'blog/blog_upload.html',{
+        "articles_rank1": articles_rank1,
+        "articles_rank2": articles_rank2,
+    })
+
+
+def upload_action(request):
     message = "上传成功"
     if request.method == "POST":
         try:
@@ -49,25 +82,22 @@ def uploadresult(request):
                 message = "请选择正确的MarkDown文件"
                 return render(request, "blog/result.html", {"message": message})
             else:
-                # 文件写入本地
-                path = "E:\\upload"
-                if not os.path.isdir(path):
-                    os.makedirs(path)
-                destination = open(os.path.join(path, file.name), 'wb+')  # 打开特定的文件进行二进制的写操作
-                for chunk in file.chunks():  # 分块写入文件
-                    destination.write(chunk)
-                destination.close()
+
+                body = ""
+                for line in file:
+                    line = str(line.decode("utf-8"))
+                    line = line.split("\r")
+                    for listitem in line:
+                        body += str(listitem).split('\r\n')[0]
+
+                if abstract == '' or len(abstract) == 0:
+                    abstract = body[0:54]
 
                 # 信息写入数据库
                 if topped == "on":
                     topped = True
-<<<<<<< HEAD
                 Member.objects.get(name=user_name).articles.create(title=title,
-                                       body=path+file.name,
-=======
-                Article.objects.create(title=title,
-                                       body=path + file.name,
->>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
+                                       body=body,
                                        created_time=time.time(),
                                        last_modified_time=time.time(),
                                        status=status,
@@ -82,22 +112,8 @@ def uploadresult(request):
             print(e)
             return HttpResponse('Some error happend ,please review')
 
-<<<<<<< HEAD
-
-def reeditacticle(request):
-    title = "ttt"
-    abstract = ""
-    return render(request, 'blog/reedit.html', {"title": title, "abstract": abstract })
 
 
-def reeditresult(request):
-    print("")
-
-
-=======
-        article.body = markdown.markdown(article.body, )
-    return article_list
->>>>>>> f2edd6f8d7bfdc594c5ff6786ce9ceef2540a80b
 
 
 def login(request):

@@ -1,0 +1,46 @@
+{% extends 'blog/blog_base.html' %}
+
+{% block blog_upload_part %}
+            <form role="form" action="result" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="form-group">
+					 <label for="exampleInputEmail1">标题</label>
+					 <input type="text" name="title" class="form-control"/>
+				</div>
+				<div class="form-group">
+					 <label for="exampleInputPassword1">摘要</label>
+					 <textarea name="abstract" class="form-control"></textarea>
+					 <p class="help-block">
+						字数控制在54以内，不填写默认为空
+					 </p>
+				</div>
+				<div class="form-group">
+					 <label for="exampleInputFile">文章</label>
+					 <input type="file" name="body"/>
+					 <p class="help-block">
+						请选择MarkDown文件（.md）
+					 </p>
+				</div>
+				<div class="form-group">
+					 <label>是否置顶</label>
+					 <input type="radio" name="topped" class="input[radio]">置顶
+					 <input type="radio" name="topped" checked="checked">不置顶
+				</div>
+				<div class="form-group">
+					 <label>文章状态</label>
+					 <select name="status" class="dropdown-toggle">
+						<option value="d">d</option>
+						<option value="p">p</option>
+					 </select>
+					 <p class="help-block">
+						是否完成编辑（"d"->未完成，"p"->已完成）
+					 </p>
+				</div>
+				<div class="form-group">
+					 <label>标签（功能暂时未实现）</label>
+				</div>
+
+					<button type="submit" class="btn btn-default">上传</button>
+			</form>
+
+{% endblock %}
