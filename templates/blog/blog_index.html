@@ -10,8 +10,11 @@
 			    <p>
 				{{ article.abstract }}
 			    </p>
+                <p>
+				{{ article.last_modified_time }}
+			    </p>
 			    <p>
-				 <a class="btn" href="#">点击查看更多</a>
+				 <a class="btn" href="/blog/article?title={{ article.title }}&last_modified_time={{ article.last_modified_time|date:'Y-m-d H:i:s' }}">点击查看更多</a>
 			    </p>
                 <hr>
             {% empty %}

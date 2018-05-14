@@ -16,7 +16,10 @@
 		
 	</head>
 	<body>
-
+            {% csrf_token %}
+            <script language="JavaScript">
+                window.open ('../blog/message',"登录提示",'height=100,width=400,top=300,left=400,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no')
+            </script>
 			<div id="particles-js"></div>
 		
 			<ul class="cb-slideshow">

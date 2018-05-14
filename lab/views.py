@@ -1,24 +1,34 @@
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 import time
-from django.template import Context, RequestContext
-from django.views.generic import ListView, View
-import markdown
-from lab.models import Article, Member
-from django.core.urlresolvers import reverse
+from django.template import Context
+from lab.models import Article, Member, Tag,Category
+from django.urls import reverse
+import MySQLdb
+
 
 
 def index_view(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
     return HttpResponseRedirect(
         reverse('blog_index', args=[1])
     )
 
 
 def index_view_page(request,i):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
     i=int(i)
 
     #按照最后一次的修改时间来排序
-    articles = Article.objects.order_by("last_modified_time").all()
+    articles = Article.objects.order_by("-last_modified_time").all()
 
     #根据页数i，一个html获取四个article，
     start = (i-1)*4
@@ -59,16 +69,30 @@ def rank(condition):
 
 
 def upload_view(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
+    #更新页面
+    category = Category.objects.all()
     articles_rank1 = rank("-likes")
     articles_rank2 = rank("-views")
+
+    tags =Tag.objects.all()
     return render(request, 'blog/blog_upload.html',{
+        "category": category,
         "articles_rank1": articles_rank1,
         "articles_rank2": articles_rank2,
+        "tags": tags
     })
 
 
 def upload_action(request):
-    message = "上传成功"
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
     if request.method == "POST":
         try:
             user_name = request.session["user_name"]
@@ -77,12 +101,124 @@ def upload_action(request):
             status = request.POST['status']
             abstract = request.POST['abstract']
             topped = request.POST['topped']
+            category = request.POST['category']
+            tags = request.POST.getlist(key="tags")
 
-            if title != "" and not file and file.name.find(".md") == -1:
-                message = "请选择正确的MarkDown文件"
-                return render(request, "blog/result.html", {"message": message})
+            if title == "":
+                return render(request, "blog/blog_upload.html", {"message": "请填写标题"})
+            if not file or file.name.find(".md") == -1:
+                return render(request, "blog/blog_upload.html", {"message": "请选择正确的MarkDown文件"})
             else:
 
+                #对正文进行格式转化,去掉转义字符，例如\r\n，这时就转化为str（\r\n）
+                body = MySQLdb.escape_string(file.read()).decode("utf-8")
+
+
+
+                #如果简介为空，则取正文钱54个字
+                if abstract == '' or len(abstract) == 0:
+                    abstract = body[0:54]
+
+                # 判断是否置顶，格式转化
+                if topped == "on":
+                    topped = True
+                else:
+                    topped = False
+
+                # 信息写入数据库
+                m=Member.objects.get(name=user_name).articles.create(
+                                        title=title,
+                                        body=body,
+                                        created_time=time.time(),
+                                        last_modified_time=time.time(),
+                                        status=status,
+                                        abstract=abstract,
+                                        views=0,
+                                        likes=0,
+                                        topped=topped,
+                                        category=Category.objects.get(name=category)
+                )
+                for tag in tags:
+                    m.tags.add(Tag.objects.get(name=tag))
+
+                category = Category.objects.all()
+                articles_rank1 = rank("-likes")
+                articles_rank2 = rank("-views")
+
+                return render(request, "blog/blog_result.html",
+                              {"message": "上传成功",
+                               "articles_rank1": articles_rank1,
+                               "articles_rank2": articles_rank2,
+                               })
+
+        except Exception as e:
+            return HttpResponse(e)
+
+
+def article_view(request):
+    try:
+        request.encoding="utf-8"
+        title = request.GET.get("title")
+        last_modified_time = request.GET.get("last_modified_time")
+
+        #the article must return just one!
+        article = Article.objects.get(title=title,
+                                      last_modified_time__contains=last_modified_time
+                                      )
+
+        #从mysql中取出的是str类型，我们用replace替换\r\n，注意要去掉转义
+        #替换为\n后，在html界面可以用{{value|linebreaksbr}}过滤器，将value中的"\n"将被<br/>替代
+        #这个<br>是适应html格式的，可以显示出效果，而不是单纯的文本
+        body = article.body.replace("\\r\\n","\n")
+        return render(request,"blog/blog_article.html",{"article": article,"body":body})
+    except Exception as e:
+        print(e)
+
+
+
+def reedit_view(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
+    #更新页面
+    category = Category.objects.all()
+    articles_rank1 = rank("-likes")
+    articles_rank2 = rank("-views")
+
+    tags =Tag.objects.all()
+    return render(request, 'blog/blog_upload.html',{
+        "category": category,
+        "articles_rank1": articles_rank1,
+        "articles_rank2": articles_rank2,
+        "tags": tags
+    })
+
+
+def reedit_action(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+    if request.method == "POST":
+        try:
+            user_name = request.session["user_name"]
+            title = request.POST['title']
+            file = request.FILES.get("body")
+            status = request.POST['status']
+            abstract = request.POST['abstract']
+            topped = request.POST['topped']
+            category = request.POST['category']
+            tags = request.POST.getlist(key="tags")
+
+            if title == "":
+                return render(request, "blog/blog_upload.html", {"message": "请填写标题"})
+            if not file or file.name.find(".md") == -1:
+                return render(request, "blog/blog_upload.html", {"message": "请选择正确的MarkDown文件"})
+            else:
+
+                #对正文进行格式转化
                 body = ""
                 for line in file:
                     line = str(line.decode("utf-8"))
@@ -90,27 +226,58 @@ def upload_action(request):
                     for listitem in line:
                         body += str(listitem).split('\r\n')[0]
 
+                #如果简介为空，则取正文钱54个字
                 if abstract == '' or len(abstract) == 0:
                     abstract = body[0:54]
 
-                # 信息写入数据库
+                # 判断是否置顶，格式转化
                 if topped == "on":
                     topped = True
-                Member.objects.get(name=user_name).articles.create(title=title,
-                                       body=body,
-                                       created_time=time.time(),
-                                       last_modified_time=time.time(),
-                                       status=status,
-                                       abstract=abstract,
-                                       views=0,
-                                       likes=0,
-                                       topped=topped,)
+                else:
+                    topped = False
 
-                return render(request, "blog/result.html", {"message": message})
+                # 信息写入数据库
+                m=Member.objects.get(name=user_name).articles.create(
+                                        title=title,
+                                        body=body,
+                                        created_time=time.time(),
+                                        last_modified_time=time.time(),
+                                        status=status,
+                                        abstract=abstract,
+                                        views=0,
+                                        likes=0,
+                                        topped=topped,
+                                        category=Category.objects.get(name=category)
+                )
+                for tag in tags:
+                    m.tags.add(Tag.objects.get(name=tag))
+
+                articles_rank1 = rank("-likes")
+                articles_rank2 = rank("-views")
+
+                return render(request, "blog/blog_result.html",
+                              {"message": "上传成功",
+                               "articles_rank1": articles_rank1,
+                               "articles_rank2": articles_rank2,
+                               })
 
         except Exception as e:
-            print(e)
-            return HttpResponse('Some error happend ,please review')
+            return HttpResponse(e)
+
+
+#这个页面用来显示登录超时
+def show_message(request):
+    return render(request,"blog/message.html")
+
+
+#获取session中的user_name，如果为空则跳转到/member/login界面
+def login_confirm(request):
+    try:
+        user_name = request.session['user_name']
+    except KeyError as e:
+        return HttpResponseRedirect("/member/login")
+
+
 
 
 

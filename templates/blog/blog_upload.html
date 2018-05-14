@@ -1,7 +1,52 @@
+	<script>
+    var inputELe = document.getElementById('input'); //input元素
+    var labelEle =  document.getElementById('label'); //label元素
+labelEle.addEventListener('click',function(e){ //给label添加事件
+　　　　　alert('我被点了');
+        if(inputELe.checked){ //由于点击label的时候，还没有告诉checkbo改变状态，所以当前值是false，执行else语句
+            inputELe.checked = false //置为false
+        }else{
+            inputELe.checked = true //所以这个时候checkbox应该变成了true，状态改变成功！
+        }
+    });
+</script>
+
+	<style type="text/css">
+.checkboxmode1{display:none;}
+/*******STYLE 1*******/
+.checkboxmode1 + label {
+background-color: lightblue;
+border: 1px solid #C1CACA;
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+padding: 10px;
+border-radius: 10px;
+display: inline-block;
+position: relative;
+margin-right: 30px;}
+.checkboxmode1 + label:active {
+box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);}
+.checkboxmode1:checked + label {
+background-color: lightgreen;
+border: 1px solid #92A1AC;
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05), inset 15px 10px -12px rgba(255, 255, 255, 0.1);
+color: black;}
+.checkboxmode1:checked + label:after{
+content: '\2714';
+position: absolute;
+top: 0px;
+left: 0px;
+color: red;
+width: 100%;
+text-align: center;
+font-size: 1.5em;
+padding: 1px 0 0 0;
+vertical-align: text-top;
+}
+</style>
 {% extends 'blog/blog_base.html' %}
 
 {% block blog_upload_part %}
-            <form role="form" action="result" method="POST" enctype="multipart/form-data">
+            <form role="form" action="upload_result" method="POST" enctype="multipart/form-data">
 				{% csrf_token %}
 				<div class="form-group">
 					 <label for="exampleInputEmail1">标题</label>
@@ -36,11 +81,25 @@
 						是否完成编辑（"d"->未完成，"p"->已完成）
 					 </p>
 				</div>
+                <div class="form-group">
+					 <label>文章分类</label>
+					 <select name="category" class="dropdown-toggle">
+                         {%  for c in category %}
+                             <option value="{{ c }}">{{ c }}</option>
+                         {% endfor %}
+                     </select>
+				</div>
 				<div class="form-group">
-					 <label>标签（功能暂时未实现）</label>
+					 <label>标签</label><br>
+                    {% for t in tags %}
+                        <!--<input type="checkbox" name="tags" value="{{ t }}">{{ t }}-->
+                        <input id={{ t }} type="checkbox" name="tags" class ="checkboxmode1" value="{{ t }}"> <label id="label" for="{{ t }}">{{ t }}</label>
+                    {% endfor %}
 				</div>
 
+
 					<button type="submit" class="btn btn-default">上传</button>
+                <h2 style="color: red">{{ message }}</h2>
 			</form>
 
 {% endblock %}

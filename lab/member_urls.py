@@ -22,5 +22,5 @@ urlpatterns = [
     url('login$',views.login),
     url('login_action$',views.loginAction),
     url('register$',views.register),
-    url('register_action',views.registerAction)
+    url('register_action',views.registerAction),
 ]

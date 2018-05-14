@@ -1,0 +1,6 @@
+{% extends 'blog/blog_base.html' %}
+<!--这个页面是blog上传，修改，删除成功后的页面，显示成功信息-->
+<!--如果没成功则是在当前页面直接显示错误信息-->
+{% block blog_reuslt_part %}
+    <h2 style="color: red">{{ message }}</h2>
+{% endblock %}

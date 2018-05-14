@@ -4,6 +4,14 @@ from django.db import models
 from django.urls import reverse
 
 
+# class DateTimeField(models.DateTimeField):
+#     def data_types(self):
+#         if self.features.supports_microsecond_precision:
+#             return dict(self._data_types, DateTimeField='datetime(0)', TimeField='time(6)')
+#         else:
+#             return self._data_types
+
+
 class Article(models.Model):
     STATUS_CHOICES = (
         ('d', 'part'),

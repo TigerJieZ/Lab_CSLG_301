@@ -22,7 +22,7 @@
                     <td>{{ forloop.counter}}</td>
                     <td>{{ article.title }}</td>
                     <td>{{ article.likes }}</td>
-                    <td>{{ article.last_modified_time }}</td>
+                    <td>{{ article.last_modified_time|date:'Y-m-d H:i:s' }}</td>
                     </tr>
                 {% endfor %}
 				</tbody>
@@ -39,7 +39,7 @@
 							标题
 						</th>
 						<th>
-							点赞量
+							浏览次数
 						</th>
                         <th>
 							修改时间
@@ -51,8 +51,8 @@
                     <tr>
                     <td><p>{{ forloop.counter}}</p></td>
                     <td><p>{{ article.title }}</p></td>
-                    <td><p>{{ article.likes }}</p></td>
-                    <td><p>{{ article.last_modified_time }}</p></td>
+                    <td><p>{{ article.views }}</p></td>
+                    <td><p>{{ article.last_modified_time|date:'Y-m-d H:i:s' }}</p></td>
                     </tr>
                 {% endfor %}
 				</tbody>

@@ -21,8 +21,15 @@ urlpatterns = [
 
     url(r'index$', views.index_view,),
     url(r'index/(\d+)$', views.index_view_page,name= "blog_index"),
-    url(r'upload$', views.upload_view),
-    url(r'result$', views.upload_action),
 
+    url(r'article$', views.article_view),
+
+    url(r'upload$', views.upload_view),
+    url(r'upload_result$', views.upload_action),
+
+    url(r'reedit$', views.reedit_view),
+    url(r'reedit_result$', views.reedit_action),
+
+    url(r'message$', views.show_message),
 
 ]
