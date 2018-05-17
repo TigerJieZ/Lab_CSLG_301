@@ -8,6 +8,16 @@
     <p>
         {{ body|linebreaksbr|escape}}
     </p>
+    <hr>
+    <h2>评论：</h2>
+        {% for c in comments %}
+          <p>{{ c.user_name }}:{{ c.body }}</p>
+          <p>时间{{ c.created_time }}</p>
+        {% endfor %}
+    <hr>
+    <p>
+
+    </p>
 
 
 

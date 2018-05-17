@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.template import Context
-from lab.models import Article, Member, Tag,Category
+from lab.models import Article, Member, Tag,Category,BlogComment
 from django.urls import reverse
 import MySQLdb
 
@@ -59,6 +59,56 @@ def index_view_page(request,i):
                                                     "articles_rank1": articles_rank1,
                                                     "articles_rank2": articles_rank2,
                                                     })
+
+
+def user_index(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
+    return HttpResponseRedirect(
+        reverse('blog_user_index', args=[1])
+    )
+
+
+def user_index_view(request,i):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
+    try:
+        user_name = request.session['user_name']
+        i = int(i)
+        # 按照最后一次的修改时间来排序获取当前用户的文章
+        articles = Article.objects.all().filter(member=Member.objects.get(name=user_name))
+
+        #articles = Article.objects.all().order_by("-last_modified_time").filter(user_name=user_name)
+
+        # 根据页数i，一个html获取四个article，
+        start = (i - 1) * 4
+        end = i * 4
+        article_4 = articles[start:end]
+
+        # 获取总的文章数量
+        numOfarticles = articles.__len__()
+
+        # 总页数
+        pagenum = int(numOfarticles / 4) + 1
+
+        prev = i - 1
+        next = i + 1
+        final = pagenum
+        return render(request, "blog/blog_user_index.html",
+                      {"articles": article_4,
+                       "prev": prev,
+                       "next": next,
+                       "final": final,
+                       })
+    except Exception as e:
+        return HttpResponse(e)
+
 
 
 #condition (likes => 点赞量 views => 浏览量) (排序方式是从小到大，请加上“-”)
@@ -126,22 +176,38 @@ def upload_action(request):
                     topped = False
 
                 # 信息写入数据库
-                m=Member.objects.get(name=user_name).articles.create(
-                                        title=title,
-                                        body=body,
-                                        created_time=time.time(),
-                                        last_modified_time=time.time(),
-                                        status=status,
-                                        abstract=abstract,
-                                        views=0,
-                                        likes=0,
-                                        topped=topped,
-                                        category=Category.objects.get(name=category)
+                # m=Member.objects.get(name=user_name).articles.create(
+                #                         title=title,
+                #                         body=body,
+                #                         created_time=time.time(),
+                #                         last_modified_time=time.time(),
+                #                         status=status,
+                #                         abstract=abstract,
+                #                         views=0,
+                #                         likes=0,
+                #                         topped=topped,
+                #                         category=Category.objects.get(name=category)
+                # )
+                # for tag in tags:
+                #     m.tags.add(Tag.objects.get(name=tag))
+
+                a=Article.objects.create(
+                    title=title,
+                    body=body,
+                    created_time=time.time(),
+                    last_modified_time=time.time(),
+                    status=status,
+                    abstract=abstract,
+                    views=0,
+                    likes=0,
+                    topped=topped,
+                    category=Category.objects.get(name=category),
+                    member=Member.objects.get(name=user_name),
+
                 )
                 for tag in tags:
-                    m.tags.add(Tag.objects.get(name=tag))
+                    a.tags.add(Tag.objects.get(name=tag))
 
-                category = Category.objects.all()
                 articles_rank1 = rank("-likes")
                 articles_rank2 = rank("-views")
 
@@ -156,8 +222,12 @@ def upload_action(request):
 
 
 def article_view(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
     try:
-        request.encoding="utf-8"
+        request.encoding = "utf-8"
         title = request.GET.get("title")
         last_modified_time = request.GET.get("last_modified_time")
 
@@ -170,30 +240,64 @@ def article_view(request):
         #替换为\n后，在html界面可以用{{value|linebreaksbr}}过滤器，将value中的"\n"将被<br/>替代
         #这个<br>是适应html格式的，可以显示出效果，而不是单纯的文本
         body = article.body.replace("\\r\\n","\n")
-        return render(request,"blog/blog_article.html",{"article": article,"body":body})
+
+        #取出评论
+        #comment = BlogComment.objects.order_by("-created_time").get(article=article)
+        comments = BlogComment.objects.all().order_by("-created_time").filter(article=article)
+
+        # 更新rank
+        category = Category.objects.all()
+        articles_rank1 = rank("-likes")
+        articles_rank2 = rank("-views")
+
+        return render(request,"blog/blog_article.html",
+                      {"article": article,
+                       "body": body,
+                       "comments": comments,
+                       "articles_rank1": articles_rank1,
+                       "articles_rank2": articles_rank2,
+                       })
     except Exception as e:
         print(e)
 
 
-
 def reedit_view(request):
-    #登录核对
+    # 登录核对
     renderObj = login_confirm(request)
     if renderObj != None:
         return renderObj
 
-    #更新页面
-    category = Category.objects.all()
-    articles_rank1 = rank("-likes")
-    articles_rank2 = rank("-views")
+    try:
+        request.encoding = "utf-8"
+        title = request.GET.get("title")
+        last_modified_time = request.GET.get("last_modified_time")
+        request.session['old_title'] = title
+        request.session['old_modified_time'] = last_modified_time
 
-    tags =Tag.objects.all()
-    return render(request, 'blog/blog_upload.html',{
-        "category": category,
-        "articles_rank1": articles_rank1,
-        "articles_rank2": articles_rank2,
-        "tags": tags
-    })
+        # the article must return just one!
+        article = Article.objects.get(title=title,
+                                      last_modified_time__contains=last_modified_time
+                                      )
+
+        tags_checked = Tag.objects.all().filter(article=article)
+
+        # 更新rank
+        articles_rank1 = rank("-likes")
+        articles_rank2 = rank("-views")
+
+        category = Category.objects.all()
+        tags = Tag.objects.all()
+
+        return render(request, 'blog/blog_reedit.html', {
+            "article": article,
+            "category": category,
+            "articles_rank1": articles_rank1,
+            "articles_rank2": articles_rank2,
+            "tags": tags,
+            "tags_checked": tags_checked,
+        })
+    except Exception as e:
+        return HttpResponse(e)
 
 
 def reedit_action(request):
@@ -212,19 +316,17 @@ def reedit_action(request):
             category = request.POST['category']
             tags = request.POST.getlist(key="tags")
 
+            old_title =request.session["old_title"]
+            old_modified_time =request.session['old_modified_time']
+
             if title == "":
                 return render(request, "blog/blog_upload.html", {"message": "请填写标题"})
             if not file or file.name.find(".md") == -1:
                 return render(request, "blog/blog_upload.html", {"message": "请选择正确的MarkDown文件"})
             else:
 
-                #对正文进行格式转化
-                body = ""
-                for line in file:
-                    line = str(line.decode("utf-8"))
-                    line = line.split("\r")
-                    for listitem in line:
-                        body += str(listitem).split('\r\n')[0]
+                # 对正文进行格式转化,去掉转义字符，例如\r\n，这时就转化为str（\r\n）
+                body = MySQLdb.escape_string(file.read()).decode("utf-8")
 
                 #如果简介为空，则取正文钱54个字
                 if abstract == '' or len(abstract) == 0:
@@ -237,40 +339,46 @@ def reedit_action(request):
                     topped = False
 
                 # 信息写入数据库
-                m=Member.objects.get(name=user_name).articles.create(
-                                        title=title,
-                                        body=body,
-                                        created_time=time.time(),
-                                        last_modified_time=time.time(),
-                                        status=status,
-                                        abstract=abstract,
-                                        views=0,
-                                        likes=0,
-                                        topped=topped,
-                                        category=Category.objects.get(name=category)
+                a = Article.objects.all().filter(title=old_title,last_modified_time__contains=old_modified_time)
+                a_t = Article.objects.all().get(title=old_title,last_modified_time__contains=old_modified_time)
+                a.update(
+                    title=title,
+                    body=body,
+                    last_modified_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
+                    status=status,
+                    abstract=abstract,
+                    views=0,
+                    likes=0,
+                    topped=topped,
+                    category=Category.objects.get(name=category),
+                    member=Member.objects.get(name=user_name),
                 )
+
+                del request.session['old_title']
+                del request.session['old_modified_time']
+
                 for tag in tags:
-                    m.tags.add(Tag.objects.get(name=tag))
+                    a_t.tags.add(Tag.objects.get(name=tag))
 
                 articles_rank1 = rank("-likes")
                 articles_rank2 = rank("-views")
 
                 return render(request, "blog/blog_result.html",
-                              {"message": "上传成功",
+                              {"message": "修改成功",
                                "articles_rank1": articles_rank1,
                                "articles_rank2": articles_rank2,
                                })
 
         except Exception as e:
-            return HttpResponse(e)
+            print(e)
 
 
-#这个页面用来显示登录超时
+# 这个页面用来显示登录超时
 def show_message(request):
     return render(request,"blog/message.html")
 
 
-#获取session中的user_name，如果为空则跳转到/member/login界面
+# 获取session中的user_name，如果为空则跳转到/member/login界面
 def login_confirm(request):
     try:
         user_name = request.session['user_name']

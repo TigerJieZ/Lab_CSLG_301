@@ -44,6 +44,9 @@ class Article(models.Model):
     # 标签云
     tags = models.ManyToManyField('Tag', verbose_name='标签集合', blank=True)
 
+    # 用户
+    member = models.ForeignKey('Member', verbose_name='作者', null=True, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
 
@@ -111,7 +114,7 @@ class Member(models.Model):
     password = models.CharField('密码', max_length=10)
     profession = models.CharField('专业', max_length=30)
     academy = models.CharField('学院', max_length=30)
-    articles = models.ManyToManyField(Article)
+    #articles = models.ManyToManyField(Article)
     permission = models.CharField('权限', max_length=10)
 
     def __str__(self):

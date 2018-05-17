@@ -45,16 +45,16 @@ vertical-align: text-top;
 </style>
 {% extends 'blog/blog_base.html' %}
 
-{% block blog_upload_part %}
-            <form role="form" action="upload_result" method="POST" enctype="multipart/form-data">
+{% block blog_reedit_part %}
+            <form role="form" action="reedit_result" method="POST" enctype="multipart/form-data">
 				{% csrf_token %}
 				<div class="form-group">
 					 <label for="exampleInputEmail1">标题</label>
-					 <input type="text" name="title" class="form-control"/>
+					 <input type="text" name="title" class="form-control" value="{{ article.title }}"/>
 				</div>
 				<div class="form-group">
 					 <label for="exampleInputPassword1">摘要</label>
-					 <textarea name="abstract" class="form-control"  style="resize:none" ></textarea>
+					 <textarea name="abstract" class="form-control"  style="resize:none" >{{ article.abstract }}</textarea>
 					 <p class="help-block">
 						字数控制在54以内，不填写默认为空
 					 </p>
@@ -63,19 +63,29 @@ vertical-align: text-top;
 					 <label for="exampleInputFile">文章</label>
 					 <input type="file" name="body"/>
 					 <p class="help-block">
-						请选择MarkDown文件（.md）
+						请重新选择MarkDown文件（.md）
 					 </p>
 				</div>
 				<div class="form-group">
 					 <label>是否置顶</label>
-					 <input type="radio" name="topped" class="input[radio]">置顶
+                    {% if article.topped == True %}
+					 <input type="radio" name="topped" class="input[radio]" checked="checked">置顶
+					 <input type="radio" name="topped">不置顶
+                    {% else %}
+                     <input type="radio" name="topped" class="input[radio]">置顶
 					 <input type="radio" name="topped" checked="checked">不置顶
+                    {% endif %}
 				</div>
 				<div class="form-group">
 					 <label>文章状态</label>
-					 <select name="status" class="dropdown-toggle">
-						<option value="d">d</option>
-						<option value="p">p</option>
+					 <select name="status" class="dropdown-toggle" >
+                         {% if article.status == p %}
+						  <option value="d">d</option>
+						  <option value="p" selected>p</option>
+                         {% else %}
+                          <option value="d" selected>d</option>
+						  <option value="p">p</option>
+                         {% endif %}
 					 </select>
 					 <p class="help-block">
 						是否完成编辑（"d"->未完成，"p"->已完成）
@@ -85,20 +95,27 @@ vertical-align: text-top;
 					 <label>文章分类</label>
 					 <select name="category" class="dropdown-toggle">
                          {%  for c in category %}
+                             {% if article.category == c %}
+                             <option value="{{ c }}" selected>{{ c }}</option>
+                             {% else %}
                              <option value="{{ c }}">{{ c }}</option>
+                             {% endif %}
                          {% endfor %}
                      </select>
 				</div>
 				<div class="form-group">
 					 <label>标签</label><br>
                     {% for t in tags %}
-                        <!--<input type="checkbox" name="tags" value="{{ t }}">{{ t }}-->
-                        <input id={{ t }} type="checkbox" name="tags" class ="checkboxmode1" value="{{ t }}"> <label id="label" for="{{ t }}">{{ t }}</label>
-                    {% endfor %}
+                        {% if t in tags_checked %}
+                            <input id={{ t }} type="checkbox" name="tags" class ="checkboxmode1" value="{{ t }}" checked="checked"> <label id="label" for="{{ t }}">{{ t }}</label>
+                        {% else %}
+                            <input id={{ t }} type="checkbox" name="tags" class ="checkboxmode1" value="{{ t }}"> <label id="label" for="{{ t }}">{{ t }}</label>
+                        {% endif %}
+                        {% endfor %}
 				</div>
 
 
-					<button type="submit" class="btn btn-default">上传</button>
+					<button type="submit" class="btn btn-default">修改</button>
                 <h2 style="color: red">{{ message }}</h2>
 			</form>
 

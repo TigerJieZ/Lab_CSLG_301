@@ -1,0 +1,50 @@
+{% extends 'blog/blog_base.html' %}
+
+{% block blog_user_index_part %}
+
+    <table class="table table-striped">
+	<caption>条纹表格布局</caption>
+	<thead>
+		<tr>
+			<th>文章名称</th>
+			<th>最后一次修改时间</th>
+			<th>文章状态</th>
+            <th>点赞量</th>
+            <th>浏览量</th>
+            <th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+        {% for article in  articles %}
+            <tr>
+			<td>{{ article.title }}</td>
+			<td>{{ article.last_modified_time|date:'Y-m-d H:i:s' }}</td>
+			<td>{{ article.status }}</td>
+            <td>{{ article.likes }}</td>
+            <td>{{ article.views }}</td>
+            <td>
+                <a href="/blog/reedit?title={{ article.title }}&last_modified_time={{ article.last_modified_time|date:'Y-m-d H:i:s' }}">修改</a>
+                <a href="/blog/delete?title={{ article.title }}&last_modified_time={{ article.last_modified_time|date:'Y-m-d H:i:s' }}">删除</a>
+            </td>
+		</tr>
+            {% empty %}
+            <p>您没有文章发布</p>
+        {% endfor %}
+	</tbody>
+    </table>
+
+			<ul class="pagination pagination-lg">
+                <li>
+                    <a href="1">首页</a>
+                </li>
+                <li>
+                    <a href={{ prev }}>前一页</a>
+				<li>
+					 <a href={{ next }}>下一页</a>
+				</li>
+                <li>
+					 <a href={{ final }}>末页</a>
+				</li>
+			</ul>
+
+{% endblock %}
