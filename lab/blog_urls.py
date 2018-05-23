@@ -27,11 +27,14 @@ urlpatterns = [
 
     url(r'^article$', views.article_view),
 
-    url(r'^upload$', views.upload_view),
+    url(r'^upload$', views.upload_view,name="blog_upload"),
     url(r'^upload_result$', views.upload_action),
 
     url(r'^reedit$', views.reedit_view),
+    url(r'^reedit2$', views.reedit_view2,name="blog_reedit2"),
     url(r'^reedit_result$', views.reedit_action),
+
+    url(r'^delete$', views.delete_action),
 
     url(r'^message$', views.show_message),
 

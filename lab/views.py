@@ -5,6 +5,8 @@ from django.template import Context
 from lab.models import Article, Member, Tag,Category,BlogComment
 from django.urls import reverse
 import MySQLdb
+import markdown as mk
+
 
 
 
@@ -129,12 +131,19 @@ def upload_view(request):
     articles_rank1 = rank("-likes")
     articles_rank2 = rank("-views")
 
+    try:
+        message = request.session["upload_error_message"]
+        del request.session["upload_error_message"]
+    except Exception as e:
+        message=""
+
     tags =Tag.objects.all()
     return render(request, 'blog/blog_upload.html',{
         "category": category,
         "articles_rank1": articles_rank1,
         "articles_rank2": articles_rank2,
-        "tags": tags
+        "tags": tags,
+        "message":message,
     })
 
 
@@ -154,14 +163,17 @@ def upload_action(request):
             category = request.POST['category']
             tags = request.POST.getlist(key="tags")
 
-            if title == "":
-                return render(request, "blog/blog_upload.html", {"message": "请填写标题"})
             if not file or file.name.find(".md") == -1:
-                return render(request, "blog/blog_upload.html", {"message": "请选择正确的MarkDown文件"})
+                request.session["upload_error_message"]="请选择正确的markdown文件"
+                return HttpResponseRedirect(
+                    reverse('blog_upload')
+                )
             else:
 
                 #对正文进行格式转化,去掉转义字符，例如\r\n，这时就转化为str（\r\n）
-                body = MySQLdb.escape_string(file.read()).decode("utf-8")
+                #body = MySQLdb.escape_string(file.read()).decode("utf-8")
+
+                body = mk.markdown(file.read().decode("utf-8"))
 
 
 
@@ -174,22 +186,6 @@ def upload_action(request):
                     topped = True
                 else:
                     topped = False
-
-                # 信息写入数据库
-                # m=Member.objects.get(name=user_name).articles.create(
-                #                         title=title,
-                #                         body=body,
-                #                         created_time=time.time(),
-                #                         last_modified_time=time.time(),
-                #                         status=status,
-                #                         abstract=abstract,
-                #                         views=0,
-                #                         likes=0,
-                #                         topped=topped,
-                #                         category=Category.objects.get(name=category)
-                # )
-                # for tag in tags:
-                #     m.tags.add(Tag.objects.get(name=tag))
 
                 a=Article.objects.create(
                     title=title,
@@ -239,7 +235,9 @@ def article_view(request):
         #从mysql中取出的是str类型，我们用replace替换\r\n，注意要去掉转义
         #替换为\n后，在html界面可以用{{value|linebreaksbr}}过滤器，将value中的"\n"将被<br/>替代
         #这个<br>是适应html格式的，可以显示出效果，而不是单纯的文本
-        body = article.body.replace("\\r\\n","\n")
+        #body = article.body.replace("\\r\\n","\n")
+        body = article.body
+
 
         #取出评论
         #comment = BlogComment.objects.order_by("-created_time").get(article=article)
@@ -249,6 +247,7 @@ def article_view(request):
         category = Category.objects.all()
         articles_rank1 = rank("-likes")
         articles_rank2 = rank("-views")
+
 
         return render(request,"blog/blog_article.html",
                       {"article": article,
@@ -271,8 +270,48 @@ def reedit_view(request):
         request.encoding = "utf-8"
         title = request.GET.get("title")
         last_modified_time = request.GET.get("last_modified_time")
+
+        # the article must return just one!
+        article = Article.objects.get(title=title,
+                                      last_modified_time__contains=last_modified_time
+                                      )
+
         request.session['old_title'] = title
         request.session['old_modified_time'] = last_modified_time
+
+        tags_checked = Tag.objects.all().filter(article=article)
+
+        # 更新rank
+        articles_rank1 = rank("-likes")
+        articles_rank2 = rank("-views")
+
+        category = Category.objects.all()
+        tags = Tag.objects.all()
+
+        return render(request, 'blog/blog_reedit.html', {
+            "article": article,
+            "category": category,
+            "articles_rank1": articles_rank1,
+            "articles_rank2": articles_rank2,
+            "tags": tags,
+            "tags_checked": tags_checked,
+        })
+    except Exception as e:
+        print(e)
+
+
+def reedit_view2(request):
+    # 登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
+    try:
+        print("in reedit_view2")
+        title = request.session["old_title"]
+        last_modified_time = request.session["old_modified_time"]
+        message = request.session["reedit_error_message"]
+        del request.session["reedit_error_message"]
 
         # the article must return just one!
         article = Article.objects.get(title=title,
@@ -295,9 +334,10 @@ def reedit_view(request):
             "articles_rank2": articles_rank2,
             "tags": tags,
             "tags_checked": tags_checked,
+            "message":message,
         })
     except Exception as e:
-        return HttpResponse(e)
+        print(e)
 
 
 def reedit_action(request):
@@ -319,14 +359,17 @@ def reedit_action(request):
             old_title =request.session["old_title"]
             old_modified_time =request.session['old_modified_time']
 
-            if title == "":
-                return render(request, "blog/blog_upload.html", {"message": "请填写标题"})
             if not file or file.name.find(".md") == -1:
-                return render(request, "blog/blog_upload.html", {"message": "请选择正确的MarkDown文件"})
+                request.session["reedit_error_message"] = "请选择正确的markdown文件"
+                return HttpResponseRedirect(
+                    reverse('blog_reedit2')
+                )
             else:
 
                 # 对正文进行格式转化,去掉转义字符，例如\r\n，这时就转化为str（\r\n）
-                body = MySQLdb.escape_string(file.read()).decode("utf-8")
+                #body = MySQLdb.escape_string(file.read()).decode("utf-8")
+
+                body = mk.markdown(file.read().decode("utf-8"))
 
                 #如果简介为空，则取正文钱54个字
                 if abstract == '' or len(abstract) == 0:
@@ -371,6 +414,25 @@ def reedit_action(request):
 
         except Exception as e:
             print(e)
+
+
+def delete_action(request):
+    # 登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+
+    try:
+        request.encoding = "utf-8"
+        title = request.GET.get("title")
+        last_modified_time = request.GET.get("last_modified_time")
+        Article.objects.filter(title=title, last_modified_time__contains=last_modified_time).delete()
+        return HttpResponseRedirect(
+            reverse('blog_user_index',args=[1])
+        )
+    except Exception as e:
+        print(e)
+
 
 
 # 这个页面用来显示登录超时

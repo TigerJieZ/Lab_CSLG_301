@@ -5,9 +5,9 @@
     <h2>
         {{ article.title }}
     </h2>
-    <p>
-        {{ body|linebreaksbr|escape}}
-    </p>
+{% autoescape off %}
+    {{ article.body }}
+    {% endautoescape %}
     <hr>
     <h2>评论：</h2>
         {% for c in comments %}
