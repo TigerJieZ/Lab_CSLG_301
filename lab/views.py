@@ -6,6 +6,7 @@ from lab.models import Article, Member, Tag,Category,BlogComment
 from django.urls import reverse
 import MySQLdb
 import markdown as mk
+import re
 
 
 
@@ -179,7 +180,8 @@ def upload_action(request):
 
                 #如果简介为空，则取正文钱54个字
                 if abstract == '' or len(abstract) == 0:
-                    abstract = body[0:54]
+                    #abstract = body[0:54]
+                    abstract = re.sub("<.*?>", "", body, 0)[0:54]
 
                 # 判断是否置顶，格式转化
                 if topped == "on":
