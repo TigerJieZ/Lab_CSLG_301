@@ -1,0 +1,16 @@
+{% extends 'blog/blog_base.html' %}
+
+{% block blog_suggest_part %}
+            <form role="form" action="/blog/suggest_result" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="form-group">
+					 <label>请输入你的意见</label>
+					 <textarea name="suggest" class="form-control"  style="resize:none" ></textarea>
+                    <p class="help-block">
+						提交后会直接返回首页
+					 </p>
+				</div>
+                <button type="submit" class="btn btn-default">上传</button>
+			</form>
+
+{% endblock %}

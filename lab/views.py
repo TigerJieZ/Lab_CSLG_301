@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.template import Context
-from lab.models import Article, Member, Tag,Category,BlogComment
+from lab.models import Article, Member, Tag,Category,BlogComment,Suggest
 from django.urls import reverse
 import MySQLdb
 import markdown as mk
@@ -43,10 +43,6 @@ def index_view_page(request,i):
 
     #总页数
     pagenum = int(numOfarticles/4)+1
-    if i < pagenum:
-        pages = [-1,i+1,i+2,i+3]
-    else:
-        pages = [pagenum-3,pagenum-2,pagenum-1,-1]
     prev = i-1
     next = i+1
     final = pagenum
@@ -55,7 +51,6 @@ def index_view_page(request,i):
     articles_rank2 = rank("-views")
 
     return render(request, 'blog/blog_index.html', {"articles": article_4,
-                                                    "pages": pages,
                                                     "prev": prev,
                                                     "next": next,
                                                     "final": final,
@@ -392,8 +387,6 @@ def reedit_action(request):
                     last_modified_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
                     status=status,
                     abstract=abstract,
-                    views=0,
-                    likes=0,
                     topped=topped,
                     category=Category.objects.get(name=category),
                     member=Member.objects.get(name=user_name),
@@ -450,9 +443,86 @@ def login_confirm(request):
         return HttpResponseRedirect("/member/login")
 
 
+def suggest_view(request):
+    # 登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+    return render(request,"blog/blog_suggest.html")
 
 
+def suggest_result(request):
+    if request.method == "POST":
+        try:
+            suggest = request.POST["suggest"]
+            Suggest.objects.create(suggest=suggest)
+            return HttpResponseRedirect("/blog/index")
 
+        except Exception as e:
+            return HttpResponse(e)
+
+
+def exit(request):
+    # 登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+    try:
+        del request.session["user_name"]
+        return HttpResponseRedirect("/member/login")
+    except Exception as e:
+        return HttpResponse(e)
+
+
+def search(request):
+    #登录核对
+    renderObj = login_confirm(request)
+    if renderObj != None:
+        return renderObj
+    try:
+        keyword = request.POST['keyword']
+        if keyword!="":
+            request.session["keyword"]= keyword
+    except Exception as e:
+        return HttpResponse(e)
+    return HttpResponseRedirect(
+        reverse('blog_search', args=[1])
+    )
+
+
+def search_view(request,i):
+
+    try:
+        keyword = request.session['keyword']
+        del request.session['keyword']
+        # 按照最后一次的修改时间来排序获取当前用户的文章
+        articles = Article.objects.filter(body__icontains=keyword)
+        print(articles)
+
+        # 根据页数i，一个html获取四个article，
+        i = int(i)
+        start = (i - 1) * 4
+        end = i * 4
+        article_4 = articles[start:end]
+
+        # 获取总的文章数量
+        numOfarticles = articles.__len__()
+
+        # 总页数
+        pagenum = int(numOfarticles / 4) + 1
+
+        prev = i - 1
+        next = i + 1
+        final = pagenum
+        return render(request, "blog/blog_search.html",
+                      {"articles": article_4,
+                       "prev": prev,
+                       "next": next,
+                       "final": final,
+                       })
+    except Exception as e:
+        print(e)
+        return HttpResponse(e)
 
 
 def login(request):
@@ -480,7 +550,8 @@ def loginAction(request):
         request.session['studentID']=member.studentID
 
         # 用户个人首页
-        return memberIndexView(request)
+        #return memberIndexView(request)
+        return index_view(request)
 
 
 # 用户个人首页

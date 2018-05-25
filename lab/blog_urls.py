@@ -38,4 +38,12 @@ urlpatterns = [
 
     url(r'^message$', views.show_message),
 
+    url(r'^suggest$', views.suggest_view),
+    url(r'^suggest_result$', views.suggest_result),
+
+    url(r'^exit$', views.exit),
+
+    url(r'^search$', views.search, ),
+    url(r'^search/(\d+)$', views.search_view, name="blog_search"),
+
 ]
