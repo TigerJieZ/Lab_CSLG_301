@@ -2,23 +2,34 @@
 
 {% block blog_article_part %}
 
+    <div>
     <h2>
         {{ article.title }}
     </h2>
-{% autoescape off %}
+    </div>
+    <hr style="height:3px;border:none;border-top:3px double red;" >
+
+    <div>
+    {% autoescape off %}
     {{ article.body }}
     {% endautoescape %}
-    <hr>
+    </div>
+
+    <hr style="height:3px;border:none;border-top:3px double red;" >
+    <div>
+    <a class="btn" href="/blog/article?title={{ article.title }}&last_modified_time={{ article.last_modified_time|date:'Y-m-d H:i:s' }}&like={{ article.likes }}">点赞</a>
+
+    </div>
+
+    <hr style="height:3px;border:none;border-top:3px double red;" >
+    <div>
     <h2>评论：</h2>
         {% for c in comments %}
           <p>{{ c.user_name }}:{{ c.body }}</p>
           <p>时间{{ c.created_time }}</p>
         {% endfor %}
     <hr>
-    <p>
-
-    </p>
-
+    </div>
 
 
 {% endblock %}

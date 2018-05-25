@@ -7,6 +7,7 @@ from django.urls import reverse
 import MySQLdb
 import markdown as mk
 import re
+import django.utils.timezone as timezone
 
 
 
@@ -188,7 +189,7 @@ def upload_action(request):
                     title=title,
                     body=body,
                     created_time=time.time(),
-                    last_modified_time=time.time(),
+                    last_modified_time=timezone.now(),
                     status=status,
                     abstract=abstract,
                     views=0,
@@ -229,6 +230,16 @@ def article_view(request):
                                       last_modified_time__contains=last_modified_time
                                       )
 
+        user_name = request.session["user_name"]
+        if user_name != article.member.name:
+            article.views += 1
+            try:
+                like = int(request.GET.get("like"))
+                if like == article.likes:
+                    article.likes += 1
+            except Exception as e:
+                print(e)
+            article.save()
         #从mysql中取出的是str类型，我们用replace替换\r\n，注意要去掉转义
         #替换为\n后，在html界面可以用{{value|linebreaksbr}}过滤器，将value中的"\n"将被<br/>替代
         #这个<br>是适应html格式的，可以显示出效果，而不是单纯的文本
@@ -370,7 +381,10 @@ def reedit_action(request):
 
                 #如果简介为空，则取正文钱54个字
                 if abstract == '' or len(abstract) == 0:
-                    abstract = body[0:54]
+                    abstract = re.sub("<.*?>", "", body, 0)
+                    abstract = abstract[0:54]
+                else:
+                    abstract=abstract.replace("\r\n","")
 
                 # 判断是否置顶，格式转化
                 if topped == "on":
@@ -384,7 +398,8 @@ def reedit_action(request):
                 a.update(
                     title=title,
                     body=body,
-                    last_modified_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
+                    last_modified_time=timezone.now(),
+                    #last_modified_time=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time())),
                     status=status,
                     abstract=abstract,
                     topped=topped,
@@ -552,6 +567,10 @@ def loginAction(request):
         # 用户个人首页
         #return memberIndexView(request)
         return index_view(request)
+
+
+def like(request):
+    return None
 
 
 # 用户个人首页

@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.urls import reverse
+import django.utils.timezone
 
 
 # class DateTimeField(models.DateTimeField):
@@ -24,7 +25,7 @@ class Article(models.Model):
     created_time = models.DateTimeField('创建时间', auto_now_add=True)
     # auto_now_add : 创建时间戳，不会被覆盖
 
-    last_modified_time = models.DateTimeField('修改时间', auto_now=True)
+    last_modified_time = models.DateTimeField('修改时间', default=django.utils.timezone.now)
     # auto_now: 自动将当前时间覆盖之前时间
 
     status = models.CharField('文章状态', max_length=1, choices=STATUS_CHOICES)
