@@ -138,10 +138,12 @@ USE_TZ = False
 STATIC_URL = '/static/'
 MEDIA_URL = "/media/"
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+#if you want use in linux，please check PROJECT_ROOT，
+#in window the dirname is split whit "\"
+#you can chage dir to absolute dir
 PROJECT_ROOT = PROJECT_ROOT[0:PROJECT_ROOT.rfind("\\")]
 STATICFILES_DIRS = (
     PROJECT_ROOT + '/static/', # <= don't forget a comma here
 )
-#STATIC_ROOT = PROJECT_ROOT + "/static/"
 MEDIA_ROOT = PROJECT_ROOT + "/media/"
 

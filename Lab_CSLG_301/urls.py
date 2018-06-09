@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 from django.views.static import serve
-from Lab_CSLG_301.settings import MEDIA_ROOT
+from Lab_CSLG_301.settings import MEDIA_ROOT,STATICFILES_DIRS
 
 
 
@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^member/',include('lab.member_urls')),
     url(r'^news/',include('lab.news_urls')),
     url(r'^media/(?P<path>.*)$',  serve, {"document_root": MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$',  serve, {"document_root": STATICFILES_DIRS}),
 ]
