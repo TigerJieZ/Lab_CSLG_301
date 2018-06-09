@@ -4,93 +4,22 @@
 <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<!--
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） --
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 --
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">  <!-- Google web font "Open Sans" -->
+<!-- Google web font "Open Sans" --
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
+-->
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
 <br>
-<div class="container">
-	<div class="row clearfix">
-		<div class="col-md-12 column">
-			<nav class="navbar navbar-default" role="navigation">
-				<div class="navbar-header">
-					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Brand</a>
-				</div>
-
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-						<li class="active">
-							 <a href="#">Link</a>
-						</li>
-						<li>
-							 <a href="#">Link</a>
-						</li>
-						<li class="dropdown">
-							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-							<ul class="dropdown-menu">
-								<li>
-									 <a href="#">Action</a>
-								</li>
-								<li>
-									 <a href="#">Another action</a>
-								</li>
-								<li>
-									 <a href="#">Something else here</a>
-								</li>
-								<li class="divider">
-								</li>
-								<li>
-									 <a href="#">Separated link</a>
-								</li>
-								<li class="divider">
-								</li>
-								<li>
-									 <a href="#">One more separated link</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-					<form class="navbar-form navbar-left" role="search">
-						<div class="form-group">
-							<input type="text" class="form-control" />
-						</div> <button type="submit" class="btn btn-default">Submit</button>
-					</form>
-					<ul class="nav navbar-nav navbar-right">
-						<li>
-							 <a href="#">Link</a>
-						</li>
-						<li class="dropdown">
-							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
-							<ul class="dropdown-menu">
-								<li>
-									 <a href="#">Action</a>
-								</li>
-								<li>
-									 <a href="#">Another action</a>
-								</li>
-								<li>
-									 <a href="#">Something else here</a>
-								</li>
-								<li class="divider">
-								</li>
-								<li>
-									 <a href="#">Separated link</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-
-			</nav>
-		</div>
-	</div>
 	<div class="row clearfix">
 		<div class="col-md-2 column">
 		</div>
@@ -105,38 +34,37 @@
 		</div>
 	</div>
 	<div class="row clearfix">
-		<div class="col-md-3 column">
-
+        <div class="col-md-2 column">
 		</div>
 		<div class="col-md-6 column" >
 			<form action="register_action" method="POST">
                 {% csrf_token %}
                 <div class="form-group" style="width: 60%">
-					 <label for="InputName">Name</label><input type="text" class="form-control" name="InputName" id="InputName" />
+					 <label for="InputName">Name(姓名)</label><input type="text" class="form-control" name="InputName" id="InputName" />
 				</div>
 				<div class="form-group" style="width: 60%">
-					 <label for="InputEmail">Email address</label><input type="email" class="form-control" name="InputEmail" id="InputEmail" />
+					 <label for="InputEmail">Email address(邮箱)</label><input type="email" class="form-control" name="InputEmail" id="InputEmail" />
 				</div>
 				<div class="form-group" style="width: 60%">
-					 <label for="InputPassword">Password</label><input type="password" class="form-control" id="InputPassword" name="InputPassword" />
+					 <label for="InputPassword">Password(密码)</label><input type="password" class="form-control" id="InputPassword" name="InputPassword" />
 				</div>
                 <div class="form-group" style="width: 60%">
-					 <label for="InputPassword2">Password Confirm</label><input type="password" class="form-control" id="InputPassword2" name="InputPassword2" />
+					 <label for="InputPassword2">Password Confirm(密码确认)</label><input type="password" class="form-control" id="InputPassword2" name="InputPassword2" />
 				</div>
                 <div class="form-group" style="width: 60%">
-					 <label for="InputStudentID">Student ID</label><input type="password" class="form-control" id="InputStudentID" name="InputStudentID" />
+					 <label for="InputStudentID">Student ID(学号)</label><input type="text" class="form-control" id="InputStudentID" name="InputStudentID" />
 				</div>
                 <div class="form-group" style="width: 60%">
-					 <label for="InputGender">Gender</label><input type="text" class="form-control" id="InputGender" name="InputGender" />
+					 <label for="InputGender">Gender(性别)</label><input type="text" class="form-control" id="InputGender" name="InputGender" />
 				</div>
                 <div class="form-group" style="width: 60%">
-					 <label for="InputBirthday">Birthday</label><input type="date" class="form-control" id="InputBirthday" name="InputBirthday" />
+					 <label for="InputBirthday">Birthday(生日)</label><input type="date" class="form-control" id="InputBirthday" name="InputBirthday" />
 				</div>
                 <div class="form-group" style="width: 60%">
-					 <label for="InputAcademy">Academy</label><input type="text" class="form-control" id="InputAcademy" name="InputAcademy" />
+					 <label for="InputAcademy">Academy(学院)</label><input type="text" class="form-control" id="InputAcademy" name="InputAcademy" />
 				</div>
                 <div class="form-group" style="width: 60%">
-					 <label for="InputProfession">Profession</label><input type="text" class="form-control" id="InputProfession" name="InputProfession" />
+					 <label for="InputProfession">Profession(专业)</label><input type="text" class="form-control" id="InputProfession" name="InputProfession" />
 				</div> <button type="submit" class="btn btn-default">注册</button>
 			</form>
 		</div>
@@ -171,6 +99,8 @@
 					Eget porttitor lorem
 				</li>
 			</ul>
+		</div>
+        <div class="col-md-1 column">
 		</div>
 	</div>
 </div>

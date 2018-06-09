@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/news/css/bootstrap3.0.1.min.css">
+</head>
+<body>
+<div class="container">
+	<div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="carousel-inner item">
+                <img src="/media/image/banner/banner_1.jpg">
+            </div>
+
+        </div>
+        <div class="col-md-12 column">
+			<ul class="breadcrumb">
+				<li>
+					 <a href="/news/index">沙和尚首页</a>
+				</li>
+				<li>
+					 <a href="/news/a_list/1">成果报告</a>
+                </li>
+			</ul>
+		</div>
+		<div class="col-md-12 column">
+			<ul>
+				{% for achievement in achievements %}
+
+                    <li>
+                    <a href="/news/a_article?title={{ achievement.title }}&created_time={{ achievement.created_time|date:'Y-m-d H:i:s' }}">
+                    {{ achievement.title }}
+                    </a>
+                    ({{ achievement.created_time|date:"Y年m月d日" }})<br>
+                    </li>
+                {% endfor %}
+			</ul>
+        <div class="col-md-12 column">
+            <ul class="pagination pagination-lg">
+                <li>
+                    <a href="1">首页</a>
+                </li>
+                <li>
+                    <a href={{ prev }}>前一页</a>
+                </li>
+				<li>
+					 <a href={{ next }}>下一页</a>
+				</li>
+                <li>
+					 <a href={{ final }}>末页</a>
+				</li>
+			</ul>
+        </div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

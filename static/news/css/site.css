@@ -1,0 +1,321 @@
+.news-item {
+    padding: 4px 4px;
+    margin: 0px;
+    border-bottom: 1px dotted #555;
+}
+
+.article-title {
+    font-family: 'Microsoft YaHei';
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 42px;
+    color: black;
+    margin-bottom: 18px;
+    margin-top: 20px
+}
+
+#index-first-row img {
+    margin: 15px auto 8px auto;
+    width: 48px;
+}
+
+.indexpage li {
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 95%;
+}
+
+li.active-tab a:focus {
+    background-color: #c0a16b;
+}
+
+.cat-title {
+    color: #3d74e3;
+    font-size: 20px;
+    margin-bottom: 6px;
+    border-bottom: 2px solid #cccccc;
+    width: 6em;
+}
+
+.cat-title a {
+    text-decoration: none;
+    color: #3d74e3;
+    font-size: 20px;
+}
+
+#index-first-row .cat-title {
+    width: 62.5%;
+    text-align: left;
+    margin-bottom: 6px;
+    border-bottom: hidden;
+    margin-left: 1em;
+}
+
+.pagebody {
+    min-height: 85vh;
+    overflow: visible
+}
+
+.pagebody li {
+    margin-bottom: 4px;
+}
+
+.pagebody li:hover {
+    background-color: #eeeeee;
+}
+
+.pagebody a {
+    color: #0a0a0a;
+    font-size: 14px;
+    line-height: 16px;
+    text-decoration: none;
+}
+
+.pagebody div.newslist li {
+    margin-bottom: 4px;
+}
+
+.pagebody div.newslist a {
+    color: #0a0a0a;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.page-footer {
+    background-color: #0A70B1;
+    /*background-color: #4972e0;*/
+    color: #fff;
+}
+
+.pageheader a {
+    color: #fff;
+}
+
+.page-footer dl dt {
+    font-weight: lighter;
+    line-height: 25px;
+    font-size: 1em;
+}
+
+.page-footer dl dd {
+    font-weight: bold;
+}
+
+.page-footer .share dt {
+    display: inline;
+    float: left;
+    width: 50%;
+    margin-top: 10px;
+}
+
+.page-footer a {
+    color: #fff;
+}
+
+.CurrentPosition {
+    color: #4cae4c;
+    font-size: 12pt;
+    border-bottom: 1px solid #4cae4c;
+    margin-bottom: 2px;
+}
+
+ul.mar5px li {
+    margin-top: 5px;
+}
+
+.num {
+    margin-right: 10px;
+}
+
+.page_tab {
+    margin-top: 5px;
+}
+
+.page_tab .current {
+    margin-right: 10px;
+}
+
+.current {
+    margin-left: 10px;
+}
+
+.link-more {
+    padding-right: 20%;
+    text-align: right;
+}
+
+.link-more-s {
+    padding-right: 20%;
+}
+
+.control-panel table {
+    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
+    border-collapse: collapse;
+    font-size: 10pt;
+}
+
+.control-panel table tr {
+    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
+    border-collapse: collapse;
+    height: 30px;
+}
+
+.control-panel table tr:nth-child(odd) {
+    background-color: #fcf8e3;
+}
+
+.control-panel table tr:nth-child(even) {
+    background-color: white;
+}
+
+.control-panel table tr:first-child {
+    background-color: #f0ead8;
+}
+
+.control-panel table tr:hover {
+    background-color: #6ce26c;
+}
+
+.control-panel table td, th {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.control-panel table td.title {
+    max-width: 28em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 5px;
+}
+
+.control-panel table td.dept {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 2px;
+    max-width: 6em;
+}
+
+.img-center {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+}
+
+.img-800px {
+    max-width: 700px;
+}
+
+.image-news {
+    margin-bottom: 10px;
+}
+
+.image-news li {
+    width: 10px;
+}
+
+.image-news li.active {
+    width: 12px;
+}
+
+#rnews ul{
+    margin-left: -38px;
+}
+
+
+@media (max-device-width: 767px) {
+
+    #rnews{
+        margin-left: -20px;
+        margin-top: 15px;
+    }
+
+    #rnews ul{
+        margin-left: -18px;
+    }
+
+    .banner-xq{
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btnclose{
+        display: none;
+    }
+
+    #hot_news{
+        display: none;
+    }
+
+    #recent_news{
+        display: none;
+    }
+
+    #related_news{
+        display: none;
+    }
+
+    .article-title {
+        font-family: 'Microsoft YaHei';
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 24px;
+        color: black;
+        margin-bottom: 10px;
+        margin-top: 12px
+    }
+
+    .img-center {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 90%;
+    }
+
+    #index-first-row img {
+        display: none;
+    }
+
+    #index-first-row .cat-title {
+        text-align: left;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #3d74e3;
+        width: 6em;
+        margin-left: 0px;
+    }
+
+    .title-image{
+        display: none;
+    }
+
+    .page-footer .link {
+        display: none;
+    }
+
+    .mobile-hidden {
+        display: none;
+    }
+
+    #dlabout dt {
+        float: left;
+        display: inline;
+        margin-right: 10px;
+    }
+
+    .share {
+        clear: left;
+    }
+
+    #dlshare dt {
+        display: inline;
+        float: left;
+        width: 30%;
+    }
+}
+
+

@@ -46,6 +46,5 @@ urlpatterns = [
     url(r'^search$', views.search, ),
     url(r'^search/(\d+)$', views.search_view, name="blog_search"),
 
-    url(r'^like$',views.like,),
 
 ]

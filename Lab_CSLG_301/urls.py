@@ -15,12 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import url, include
-from lab import views
+from django.views.static import serve
+from Lab_CSLG_301.settings import MEDIA_ROOT
+
+
 
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
     url(r'^blog/', include('lab.blog_urls')),
     url(r'^member/',include('lab.member_urls')),
-
+    url(r'^news/',include('lab.news_urls')),
+    url(r'^media/(?P<path>.*)$',  serve, {"document_root": MEDIA_ROOT}),
 ]

@@ -1,0 +1,191 @@
+{% extends "news/news_temple.html" %}
+
+{% block rest %}
+    <script>
+
+    $(document).ready(function () {
+        //banner，默认是5秒；
+        $(".carousel").carousel({
+            interval: 5000
+        })
+
+
+        /*通知公告*/
+        jQuery(".txtScroll-01").slide({
+            mainCell: "ul",
+            autoPage: true,
+            effect: "topLoop",
+            autoPlay: true,
+            interTime: 4000,
+            vis: 4
+        });
+        jQuery(".txtScroll-02").slide({
+            mainCell: "ul",
+            autoPage: true,
+            effect: "topLoop",
+            autoPlay: true,
+            interTime: 5000,
+            vis: 4
+        });
+
+    });
+
+
+
+</script>
+
+
+<div class="carousel slide" id="myCarousel">
+
+    <div class="carousel-inner">
+        <div class="item">
+            <img src="/media/image/banner/banner_0.jpg">
+        </div>
+        <div class="item">
+            <img src="/media/image/banner/banner_1.jpg">
+        </div>
+        <div class="item">
+            <img src="/media/image/banner/banner_2.jpg">
+        </div>
+        <div class="item">
+            <img src="/media/image/banner/banner_3.jpg">
+        </div>
+        <div class="item">
+            <img src="/media/image/banner/banner_4.jpg">
+        </div>
+        <div class="item active">
+            <img src="/media/image/banner/banner_5.jpg">
+        </div>
+        <div class="item">
+            <img src="/media/image/banner/banner_6.jpg">
+        </div>
+        <div class="item">
+            <img src="/media/image/banner/banner_7.jpg">
+        </div>
+
+    </div>
+    <!-- 轮播（Carousel）指标 -->
+    <div class="hd">
+		<a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
+        <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="3" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="4" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="5" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="6" class=""></li>
+                        <li data-target="#myCarousel" data-slide-to="7" class=""></li>
+        </ol>
+		<a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
+
+
+    </div>
+    <!-- 轮播（Carousel）项目 -->
+
+
+</div><!--banner e-->
+
+
+<div class="personnel">
+    <div class="weap clearfix">
+        <!--左侧 s-->
+        <div class="memoir clearfix">
+            <div class="news-list" id="noticeList">
+                <div class="plo">
+                    <h3>
+                        通知公告
+                    </h3>
+                    <a href="/news/list/1" title="更多" class="more" target="_blank">更多
+                    </a>
+                </div>
+                <div class="txtScroll-01">
+                    <ul>
+                        {% for new in news %}
+                        <li>
+                            <a href="/news/article?title={{ new.title }}&created_time={{ new.created_time|date:'Y-m-d H:i:s' }}" target="_blank">
+								<div class="date">
+									<span class="d">{{ new.created_time|date:'m/d' }}</span>
+									<span class="y">{{ new.created_time|date:'Y' }}</span>
+								</div>
+								<span class="title">{{ new.title }}</span>
+                            </a>
+                        </li>
+                        {% empty %}
+                            <li>
+                            <a href="#" target="_blank">
+								<div class="date">
+									<span class="d">1/1</span>
+									<span class="y">1900</span>
+								</div>
+								<span class="title">服务器出错了</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="news-list style" id="reportList">
+                <div class="plo">
+                    <h3>
+                        成果报告
+                    </h3>
+                    <a href="/news/a_list/1" title="更多" class="more" target="_blank">更多
+                    </a>
+                </div>
+                <div class="txtScroll-02">
+                    <ul>
+                        {% for achievement in achievements %}
+                        <li>
+                            <a href="/news/a_article?title={{ achievement.title }}&created_time={{ achievement.created_time|date:'Y-m-d H:i:s' }}" target="_blank">
+								<div class="date">
+									<span class="d">{{ achievement.created_time|date:'m/d' }}</span>
+									<span class="y">{{ achievement.created_time|date:'Y' }}</span>
+								</div>
+								<span class="title">{{ achievement.title }}</span>
+                            </a>
+                        </li>
+                        {% empty %}
+                            <li>
+                            <a href="#" target="_blank">
+								<div class="date">
+									<span class="d">1/1</span>
+									<span class="y">1900</span>
+								</div>
+								<span class="title">服务器出错了</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--左侧 e-->
+        <!--右侧 s-->
+        <div class="sky">
+            <div class="hd">
+                <h3>
+                    优秀成员
+                </h3>
+                <!--<a href="#" title="更多" class="more" target="_blank">
+                </a>-->
+            </div>
+            <div class="bd">
+                <ul>
+                    <li>
+                        <a href="#" target="_blank">
+                            <img src="#">
+                            <div class="txt">
+                                <h3>龚玲梅</h3>
+                                <p>党员在身边</p>
+                            </div>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!--右侧 e-->
+    </div>
+</div>
+{% endblock %}

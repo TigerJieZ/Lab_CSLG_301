@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 import time
 from django.template import Context
-from lab.models import Article, Member, Tag,Category,BlogComment,Suggest
+from lab.models import Article, Member, Tag,Category,BlogComment,Suggest,New,Achievement
 from django.urls import reverse
 import MySQLdb
 import markdown as mk
@@ -569,8 +569,6 @@ def loginAction(request):
         return index_view(request)
 
 
-def like(request):
-    return None
 
 
 # 用户个人首页
@@ -590,25 +588,142 @@ def register(request):
 
 
 def registerAction(request):
-    # 读取表单输入的Email和Password
-    post_data = dict(request.POST)
-    name=post_data['InputName'][0]
-    email=post_data['InputEmail'][0]
-    password=post_data['InputPassword'][0]
-    password2=post_data['InputPassword2'][0]
-    studentID=post_data['InputStudentID'][0]
-    gender=post_data['InputGender'][0]
-    birthday=post_data['InputBirthday'][0]
-    academy=post_data['InputAcademy'][0]
-    profession=post_data['InputProfession'][0]
+    try:
+        name = request.POST['InputName']
+        email = request.POST['InputEmail']
+        password = request.POST['InputPassword']
+        password2 = request.POST['InputPassword2']
+        studentID = request.POST['InputStudentID']
+        gender = request.POST['InputGender']
+        birthday = request.POST['InputBirthday']
+        academy = request.POST['InputAcademy']
+        profession = request.POST['InputProfession']
 
-    if not password[0] == password2[0]:
-        return register(request)
+        if not password == password2:
+            return register(request)
+        if name == "" or email == "":
+            return register(request)
 
-    Member.objects.create(name=name,email=email,password=password,
-                          studentID=studentID,gender=gender,birthday=birthday,
-                          academy=academy,profession=profession).save()
+        Member.objects.create(name=name, email=email, password=password,
+                              studentID=studentID, gender=gender, birthday=birthday,
+                              academy=academy, profession=profession).save()
 
-    request.session['user_name']=name
-    request.session['studentID']=studentID
-    return memberIndexView(request)
+        return login(request)
+    except Exception as e:
+        return HttpResponse(e)
+
+
+def get_news(num):
+    news =New.objects.order_by("-created_time").all()[0:num]
+    return news
+
+
+def news_index_view(request):
+    #news = New.objects.order_by("-created_time").all()[0:6]
+    news = get_news(6)
+    achievements = get_achievement(6)
+    return render(request, "news/news_index.html", {
+        "news": news,
+        "achievements": achievements,
+    })
+
+
+def news_article_view(request):
+    try:
+        title = request.GET.get("title")
+        created_time = request.GET.get("created_time")
+        new = New.objects.get(title=title, created_time__contains=created_time)
+        fast_news = get_news(10)
+        return render(request, "news/news_article.html", {
+            "new": new,
+            "fast_news": fast_news,
+
+        })
+    except Exception as e:
+        return HttpResponse(e)
+
+
+def news_list_view(request,i):
+
+    i = int(i)
+    start = (i-1)*10
+    end = i*10
+    news = New.objects.order_by("-created_time").all()
+    news = news[start:end]
+    prev = i-1
+    if prev ==0:
+        prev =1
+    next = i+1
+    numOfarticles = news.__len__()
+
+    #总页数
+    pagenum = int(numOfarticles/4)+1
+    return render(request,"news/news_list.html",{
+        "news": news,
+        "prev": prev,
+        "next": next,
+        "final": pagenum,
+    })
+
+
+def get_achievement(num):
+    achievement =Achievement.objects.order_by("-created_time").all()[0:num]
+    return achievement
+
+
+def achievements_article_view(request):
+    try:
+        title = request.GET.get("title")
+        created_time = request.GET.get("created_time")
+        achievement = Achievement.objects.get(title=title, created_time__contains=created_time)
+        fast_news = get_news(10)
+        return render(request, "news/achievements_article.html", {
+            "achievement": achievement,
+            "fast_news": fast_news,
+
+        })
+    except Exception as e:
+        return HttpResponse(e)
+
+
+def achievements_list_view(request,i):
+
+    i = int(i)
+    start = (i-1)*10
+    end = i*10
+    achievements = Achievement.objects.order_by("-created_time").all()
+    achievements = achievements[start:end]
+    prev = i-1
+    if prev ==0:
+        prev =1
+    next = i+1
+    numOfarticles = achievements.__len__()
+
+    #总页数
+    pagenum = int(numOfarticles/4)+1
+    return render(request,"news/achievements_list.html",{
+        "achievements": achievements,
+        "prev": prev,
+        "next": next,
+        "final": pagenum,
+    })
+
+
+def introduction(request):
+    return render(request,"news/introduction.html")
+
+
+def organization(request):
+    return render(request,"news/organization.html")
+
+
+def exchageproject(request):
+    return render(request,"news/exchageproject.html")
+
+
+def personhiring(request):
+    return render(request,"news/personhiring.html")
+
+
+def outstandingmember(request):
+    return render(request,"news/outstandingmember.html")

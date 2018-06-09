@@ -30,7 +30,7 @@ class Article(models.Model):
 
     status = models.CharField('文章状态', max_length=1, choices=STATUS_CHOICES)
     abstract = models.CharField('摘要', max_length=54, blank=True, null=True,
-                                help_text="可选项，若为空格则摘取正文钱54个字符")
+                                help_text="可选项，若为空格则摘取正文前54个字符")
     # 阅读量
     views = models.PositiveIntegerField('浏览量', default=0)
     # 点赞数
@@ -124,7 +124,45 @@ class Member(models.Model):
 
 class Group(models.Model):
     name = models.CharField('组名', max_length=10)
-    members = models.ForeignKey(Member,on_delete=models.CASCADE)
+    members = models.ForeignKey(Member, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
+
+
+class New(models.Model):
+    title = models.CharField('新闻标题', max_length=20)
+    body = models.TextField('正文')
+    created_time = models.DateTimeField('创建时间', auto_now_add=True)
+    editor = models.CharField('编辑人', max_length=20,default="")
+
+    def __str__(self):
+        return self.title
+
+
+class News_image(models.Model):
+    filename = models.CharField('图片名称',max_length=20,default="image_default")
+    filepath = models.CharField('图片路径',max_length=50,default="/media/image/news/")
+    image = models.ImageField('图片',upload_to="image/news")
+
+    def __str__(self):
+        return self.filename
+
+
+class Achievement(models.Model):
+    title = models.CharField('成果标题', max_length=20)
+    body = models.TextField('正文')
+    created_time = models.DateTimeField('创建时间', auto_now_add=True)
+    editor = models.CharField('编辑人', max_length=20,default="")
+
+    def __str__(self):
+        return self.title
+
+
+class Achievement_image(models.Model):
+    filename = models.CharField('图片名称',max_length=20,default="image_default")
+    filepath = models.CharField('图片路径',max_length=50,default="/media/image/achievement/")
+    image = models.ImageField('图片',upload_to="image/achievement")
+
+    def __str__(self):
+        return self.filename

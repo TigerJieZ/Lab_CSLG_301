@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>新闻网</title>
+    <link rel="stylesheet" href="http://news.cslg.cn/css/bootstrap-cslg.css" media="all">
+    <link rel="stylesheet" href="http://news.cslg.cn/css/bootstrap-theme.min.css" media="all">
+    <link rel="stylesheet" href="http://news.cslg.cn/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://news.cslg.cn/css/site.css">
+    <link rel="stylesheet" href="http://news.cslg.cn/css/cslg-bootstrap-blue.css" media="all">
+    <link rel="stylesheet" href="http://news.cslg.cn/css/share.min.css"/>
+    <style>
+    .article-content p {
+        text-indent: 2em
+    }
+
+    table {
+        collapse: none;
+    }
+
+    .lastnews-list {
+        padding-top: 8px;
+    }
+
+    .lastnews-list li {
+        margin-bottom: 8px;
+        /*overflow: hidden;*/
+        /*white-space: nowrap;*/
+        /*text-overflow: clip;*/
+    }
+
+    .lastnews-list li a {
+        text-decoration: none;
+        color: #666666;
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .related-news-list {
+        margin-left: -15px;
+    }
+
+    .related-news-list li {
+        line-height: 18px;
+        font-size: 13px;
+        /*overflow: hidden;*/
+        /*white-space: nowrap;*/
+        /*text-overflow: clip;*/
+    }
+
+    .related-news-list li a {
+        text-decoration: none;
+        color: #666666;
+    }
+
+</style>
+
+</head>
+<body style="font-family: 'Microsoft YaHei'; padding-top: 62px;">
+<div class="section" style="min-height: 80vh;overflow: visible">
+    <div class="container">
+                <div class="col-md-9 col-lg-9 col-sm-9" style="background-color: #fdfdfd">
+                    <div id="title" class="article-title">
+                        {{ achievement.title }}
+                    </div>
+                    <div style="margin-top: 5px; color: lightslategray">
+                        <div id="date-topic">{{ achievement.created_time|date:'Y年m月d日 H时i分s秒' }}</div>
+                    </div>
+                    <div class="row" style="clear:both; height: 15px;"></div>
+                    <div class="article-content" style="margin-top: 10px">
+                        <div style="font-size: 15px; line-height: 24px;" id="text-content">
+                            <p style="text-align: center;">
+                                {% autoescape off %}
+                                {{ achievement.body|linebreaksbr }}
+                                {% endautoescape %}
+                            </p>
+							</div>
+                        <div style="text-align: right;">
+                            编辑人：{{ achievement.editor }}
+						</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-sm-3" style="padding-left: 30px">
+                    <div>
+						<div id="recent_news">
+							<div style="font-family: &#39;Microsoft YaHei&#39;; font-weight: bold; font-size: 17px ;color: darkred; margin-top: 10px; margin-bottom: 5px; text-indent: 0.5em">
+								新闻速递
+							</div>
+							<div style="border: 1px solid lightgray; padding-top: 5px; background-color: #f3f3f3">
+								<ul style="margin-left: -5px; margin-right: 8px;" class="lastnews-list">
+                                    {% for fast_new in fast_news %}
+                                        <li>
+                                        <a href="/news/article?title={{ fast_new.title }}&created_time={{ fast_new.created_time|date:'Y-m-d H:i:s' }}">{{ fast_new.title }}&nbsp;
+                                        <small>{{ fast_new.created_time|date:'Y年m月d日' }}</small></a>
+                                    </li>
+                                    {% endfor %}
+
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+    </div>
+	<div class="row" style="height: 60px;"></div>
+</div>
+</body>
+</html>

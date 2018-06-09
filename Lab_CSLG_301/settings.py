@@ -30,7 +30,7 @@ SECRET_KEY = '*sif@4fw98l9&5&d!7k)io4n%m$=@vo7v2-d@&=@#7=pxwy@rx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.137.56']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -136,7 +136,12 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__)) # it means settings.py is in PROJECT_ROOT?
+MEDIA_URL = "/media/"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = PROJECT_ROOT[0:PROJECT_ROOT.rfind("\\")]
 STATICFILES_DIRS = (
     PROJECT_ROOT + '/static/', # <= don't forget a comma here
 )
+#STATIC_ROOT = PROJECT_ROOT + "/static/"
+MEDIA_ROOT = PROJECT_ROOT + "/media/"
+

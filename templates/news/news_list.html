@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="/static/news/css/bootstrap3.0.1.min.css">
+</head>
+<body>
+<div class="container">
+	<div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="carousel-inner item">
+                <img src="/media/image/banner/banner_0.jpg">
+            </div>
+
+        </div>
+        <div class="col-md-12 column">
+			<ul class="breadcrumb">
+				<li>
+					 <a href="/news/index">沙和尚首页</a>
+				</li>
+				<li>
+					 <a href="/news/list/1">通知公告</a>
+                </li>
+			</ul>
+		</div>
+		<div class="col-md-12 column">
+			<ul>
+				{% for new in news %}
+
+                    <li>
+                    <a href="/news/article?title={{ new.title }}&created_time={{ new.created_time|date:'Y-m-d H:i:s' }}">
+                    {{ new.title }}
+                    </a>
+                    ({{ new.created_time|date:"Y年m月d日" }})<br>
+                    </li>
+                {% endfor %}
+			</ul>
+        <div class="col-md-12 column">
+            <ul class="pagination pagination-lg">
+                <li>
+                    <a href="1">首页</a>
+                </li>
+                <li>
+                    <a href={{ prev }}>前一页</a>
+                </li>
+				<li>
+					 <a href={{ next }}>下一页</a>
+				</li>
+                <li>
+					 <a href={{ final }}>末页</a>
+				</li>
+			</ul>
+        </div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
